@@ -3,6 +3,7 @@ port module Ports exposing (..)
 {-| interface to Elm <--> Javascript
 -}
 
+import Json.Decode exposing (..)
 import Models exposing (OAuthConfig, OAuthError, OAuthSuccess)
 
 
@@ -16,9 +17,9 @@ port check : () -> Cmd msg
 port oauth : OAuthConfig -> Cmd msg
 
 
-{-| send a token to Elm app
+{-| send a JSON record to Elm app. Will be decoded on Elm side
 -}
-port tokenChecked : (Maybe String -> msg) -> Sub msg
+port tokenChecked : (Value -> msg) -> Sub msg
 
 
 {-| send the result of OAuth2 flow back to Elm app
@@ -29,3 +30,9 @@ port onOAuthFailed : (OAuthError -> msg) -> Sub msg
 {-| send the result of OAuth2 flow back to Elm app
 -}
 port onOAuthSuccess : (OAuthSuccess -> msg) -> Sub msg
+
+
+
+{-
+   TODO: combine these last 2 methods into one like `onOAuthDone` (See TODOs in App.elm)
+-}

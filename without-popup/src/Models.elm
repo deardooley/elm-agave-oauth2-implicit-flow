@@ -16,7 +16,7 @@ type alias Model =
 
 
 type Msg
-    = CheckToken (Maybe Token)
+    = CheckToken (Result String (Maybe Token))
     | UrlChange Location
 
 

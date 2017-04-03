@@ -12,7 +12,7 @@ app.ports.check.subscribe(() => {
   const token = getToken()
   console.log("LOADING Token from localStorage", token)
 
-  app.ports.tokenChecked.send(token)
+  app.ports.tokenChecked.send({token: token})
 })
 
 app.ports.saveToken.subscribe( (token) => {

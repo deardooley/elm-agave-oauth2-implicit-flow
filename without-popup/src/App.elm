@@ -8,6 +8,7 @@ import Navigation exposing (Location)
 import Http
 import Token exposing (parseUrlParams)
 import Dict
+import Json.Decode as Decode
 
 
 init : String -> Location -> ( Model, Cmd Msg )
@@ -55,11 +56,12 @@ initCmd maybeToken maybeError =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        CheckToken (Just token) ->
-            ( { model | token = Just token, message = "You are logged in!" }, Cmd.none )
+        -- type of token is Maybe Token as it is defined by decoToken function
+        CheckToken (Ok maybeToken) ->
+            ( { model | token = maybeToken, message = "You are logged in!" }, Cmd.none )
 
-        CheckToken Nothing ->
-            ( { model | message = "Please login" }, Cmd.none )
+        CheckToken (Err err) ->
+            ( { model | message = "Please login", error = Just err }, Cmd.none )
 
         UrlChange location ->
             ( model, Cmd.none )
@@ -93,6 +95,12 @@ loginLink config =
         ++ (Http.encodeUri config.redirect)
 
 
+decodeToken : Decode.Value -> Result String (Maybe Token)
+decodeToken =
+    Decode.decodeValue
+        (Decode.maybe (Decode.field "token" Decode.string))
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    tokenChecked CheckToken
+    tokenChecked (decodeToken >> CheckToken)

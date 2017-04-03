@@ -13,9 +13,11 @@ app.ports.check.subscribe(() => {
   const token = getToken()
   console.log("LOADING Token from localStorage", token)
 
-  app.ports.tokenChecked.send(token)
+  app.ports.tokenChecked.send({token: token})
 })
 
+// TODO: combine these 2 port methods into one
+// e.g. onOAuthDone (See App.elm and Ports.elm)
 app.ports.oauth.subscribe( (config) => {
     authorize(config).then(
       (token) => {

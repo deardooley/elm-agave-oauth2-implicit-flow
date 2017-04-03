@@ -5,6 +5,7 @@ import Html.Attributes exposing (src)
 import Html.Events exposing (onClick)
 import Ports exposing (..)
 import Models exposing (..)
+import Json.Decode as Decode
 
 
 init : String -> ( Model, Cmd Msg )
@@ -15,11 +16,12 @@ init path =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        CheckToken (Just token) ->
-            ( { model | token = Just token, message = "You are logged in!" }, Cmd.none )
+        -- type of token is Maybe Token as it is defined by decoToken function
+        CheckToken (Ok maybeToken) ->
+            ( { model | token = maybeToken, message = "You are logged in!" }, Cmd.none )
 
-        CheckToken Nothing ->
-            ( { model | message = "Please login" }, Cmd.none )
+        CheckToken (Err err) ->
+            ( { model | message = "Please login", error = Just err }, Cmd.none )
 
         Login ->
             ( model, oauth config )
@@ -50,10 +52,24 @@ showToken model =
             button [ onClick Login ] [ text "Login with Facebook" ]
 
 
+decodeToken : Decode.Value -> Result String (Maybe String)
+decodeToken =
+    Decode.decodeValue
+        (Decode.maybe (Decode.field "token" Decode.string))
+
+
+
+{-
+    TODO: change this when using new Msg types (See TODOs in Models.elm)
+    We should have only one port function for OAuth check e.g.
+   `onOAuthDone (decodeOAuthToken >> OnAuthorized)`
+-}
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ tokenChecked CheckToken
+        [ tokenChecked (decodeToken >> CheckToken)
         , onOAuthFailed NotAuthorized
         , onOAuthSuccess Authorized
         ]
