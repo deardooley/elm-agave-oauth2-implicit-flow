@@ -83,7 +83,7 @@ showToken model =
             div [] [ text ("Token:" ++ token) ]
 
         Nothing ->
-            a [ href (loginLink config) ] [ text "Login with Facebook" ]
+            a [ href (loginLink config) ] [ text "Login using the Agave Platform" ]
 
 
 loginLink : OAuthConfig -> String

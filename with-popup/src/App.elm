@@ -49,7 +49,7 @@ showToken model =
             div [] [ text ("Token:" ++ token) ]
 
         Nothing ->
-            button [ onClick Login ] [ text "Login with Facebook" ]
+            button [ onClick Login ] [ text "Login using the Agave Platform" ]
 
 
 decodeToken : Decode.Value -> Result String (Maybe String)

@@ -38,10 +38,10 @@ type alias OAuthConfig =
 
 config : OAuthConfig
 config =
-    { client = "1676489349323550"
-    , url = "https://www.facebook.com/dialog/oauth"
-    , redirect = "http://localhost:8000"
-    , scope = ""
+    { client = "PEAB2SsoKtYG25tjzg0_fCSxLssa"
+    , url = "https://public.agaveapi.co/authorize"
+    , redirect = "http://localhost:8000/"
+    , scope = "PRODUCTION"
     }
 
 

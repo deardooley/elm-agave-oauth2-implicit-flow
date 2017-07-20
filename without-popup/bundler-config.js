@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const devConf = {
   entry: [
-    'webpack-dev-server/client?http://localhost:8000',
+    'webpack-dev-server/client?http://localhost:8080',
     path.join(__dirname, 'index.js')
   ],
   output: {
